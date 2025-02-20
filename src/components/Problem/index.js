@@ -43,23 +43,25 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
         'bg-white border-gray-300 hover:border-blue-500'
       }`}
     >
-      <div className="text-lg font-semibold mb-2">
-        {multiplicand} × {multiplier} = 
+      <div className="flex items-center justify-between gap-4">
+        <div className="text-lg font-semibold whitespace-nowrap">
+          {multiplicand} × {multiplier} = 
+        </div>
+        <input
+          ref={inputRef}
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          className={`flex-1 p-2 border rounded focus:outline-none focus:ring-2 text-lg ${
+            answerStatus === 'correct' ? 'border-green-500 focus:ring-green-200' :
+            answerStatus === 'incorrect' ? 'border-red-500 focus:ring-red-200' :
+            'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
+          }`}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          aria-label={`${multiplicand} times ${multiplier}`}
+        />
       </div>
-      <input
-        ref={inputRef}
-        type="text"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 ${
-          answerStatus === 'correct' ? 'border-green-500 focus:ring-green-200' :
-          answerStatus === 'incorrect' ? 'border-red-500 focus:ring-red-200' :
-          'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
-        }`}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        aria-label={`${multiplicand} times ${multiplier}`}
-      />
     </div>
   );
 } 
