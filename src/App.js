@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { GameProvider } from './context/GameContext';
+import { ProblemSet } from './components/ProblemSet';
+import { Navigation } from './components/Navigation';
+import { Timer } from './components/Timer';
+import { Layout } from './components/Layout';
+import { Results } from './components/Results';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <GameProvider>
+        <Layout>
+          <Navigation />
+          <ProblemSet />
+          <Timer />
+          <Results />
+        </Layout>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              duration: 5000,
+              iconTheme: {
+                primary: '#4ade80',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+      </GameProvider>
+    </BrowserRouter>
   );
 }
 
