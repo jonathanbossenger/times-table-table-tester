@@ -1,70 +1,119 @@
-# Getting Started with Create React App
+# Times Table Tester
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based web application for practicing multiplication tables, featuring randomized questions, time tracking, and immediate feedback.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Customizable Practice Range**: Select which times tables to practice (1-12)
+- **21 Randomized Problems**: Each session presents 21 unique multiplication problems
+- **Real-time Validation**: Immediate feedback on correct/incorrect answers
+- **Time Tracking**: Monitor how long it takes to complete the set
+- **Keyboard Navigation**: Full keyboard support for efficient input
+- **Progress Tracking**: Track correct answers and completion percentage
+- **Responsive Design**: Clean, accessible interface using Tailwind CSS
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Node.js (v14 or higher)
+- npm or yarn
 
-### `npm test`
+### Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/times-table-tester.git
+cd times-table-tester
+```
 
-### `npm run build`
+2. Install dependencies:
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Start the development server:
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## How to Use
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Select Range**: Choose the times tables you want to practice using the "From" and "To" selectors
+2. **Start Game**: Click "Start Game" to begin
+3. **Answer Problems**: 
+   - Type your answers in the input fields
+   - Use Tab/Enter to move to the next problem
+   - Use Shift+Tab/Up Arrow to move to the previous problem
+4. **Complete Set**: After answering all problems, press Tab or Enter on the last problem
+5. **View Results**: See your score, time taken, and accuracy
 
-### `npm run eject`
+## Keyboard Shortcuts
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `Tab` or `Enter`: Move to next problem
+- `Shift + Tab` or `Up Arrow`: Move to previous problem
+- `Tab` or `Enter` on last problem: Complete the game (when all answers are filled)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Technologies Used
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- React
+- React Router
+- Tailwind CSS
+- React Hot Toast
+- Headless UI
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Project Structure
 
-## Learn More
+```
+src/
+├── components/
+│   ├── Layout/       # Main layout wrapper
+│   ├── Timer/        # Time tracking display
+│   ├── ProblemSet/   # Problem grid container
+│   ├── Problem/      # Individual problem component
+│   ├── Modal/        # Instructions and results modals
+│   ├── Navigation/   # Range selection controls
+│   └── Results/      # Completion results display
+├── hooks/
+│   ├── useTimer.js   # Timer logic
+│   ├── useFocus.js   # Focus management
+│   └── useValidation.js # Answer validation
+└── context/
+    └── GameContext.js # Game state management
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Features in Detail
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Problem Generation
+- Generates exactly 21 problems
+- Displays in a fixed 3-column grid
+- Randomly selects from chosen range
+- Shows multiplication equations (e.g., 4 × 7 = )
 
-### Code Splitting
+### Scoring System
+- Tracks correct/incorrect answers
+- Calculates percentage score
+- Records completion time
+- Displays results in modal
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### User Interface
+- Clean, minimalist design
+- Real-time feedback
+- Accessible navigation
+- Clear visual indicators
 
-### Analyzing the Bundle Size
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This project is licensed under the GNU General Public License v2.0 or later - see the LICENSE file for details.
 
-### Advanced Configuration
+This program is free software; you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
