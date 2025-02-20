@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { GameProvider } from './context/GameContext';
 import { ProblemSet } from './components/ProblemSet';
@@ -10,7 +10,7 @@ import { Results } from './components/Results';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <GameProvider>
         <Layout>
           <Navigation />
@@ -36,7 +36,7 @@ function App() {
           }}
         />
       </GameProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
