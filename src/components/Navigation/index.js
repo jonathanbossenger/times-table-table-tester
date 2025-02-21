@@ -39,42 +39,50 @@ export function Navigation() {
   };
 
   return (
-    <nav className="bg-white shadow-lg p-4 mb-8">
+    <nav className="bg-white shadow-lg p-8 mb-8">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-lg font-semibold mb-4">Select Times Tables Range:</h2>
-        <div className="flex gap-4 items-center">
-          <div className="flex items-center gap-2">
-            <label htmlFor="lowerBound" className="text-gray-600">From:</label>
-            <select
-              id="lowerBound"
-              value={lowerBound}
-              onChange={handleLowerBoundChange}
-              className="p-2 border rounded-lg"
-            >
-              {Array.from({ length: 12 }, (_, i) => i + 1).map(num => (
-                <option key={num} value={num}>{num}</option>
-              ))}
-            </select>
+        <div className="flex justify-between items-start">
+          <div className="max-w-md">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Ready to start!</h2>
+            <p className="text-gray-600">Select your times tables range and press start to begin.</p>
           </div>
-          <div className="flex items-center gap-2">
-            <label htmlFor="upperBound" className="text-gray-600">To:</label>
-            <select
-              id="upperBound"
-              value={upperBound}
-              onChange={handleUpperBoundChange}
-              className="p-2 border rounded-lg"
-            >
-              {Array.from({ length: 12 }, (_, i) => i + 1).map(num => (
-                <option key={num} value={num}>{num}</option>
-              ))}
-            </select>
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Select Times Tables Range:</h3>
+            <div className="flex gap-4 items-center">
+              <div className="flex items-center gap-2">
+                <label htmlFor="lowerBound" className="text-gray-600">From:</label>
+                <select
+                  id="lowerBound"
+                  value={lowerBound}
+                  onChange={handleLowerBoundChange}
+                  className="p-2 border rounded-lg"
+                >
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map(num => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <label htmlFor="upperBound" className="text-gray-600">To:</label>
+                <select
+                  id="upperBound"
+                  value={upperBound}
+                  onChange={handleUpperBoundChange}
+                  className="p-2 border rounded-lg"
+                >
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map(num => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
+              </div>
+              <button
+                onClick={handleStartGame}
+                className="ml-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Start Game
+              </button>
+            </div>
           </div>
-          <button
-            onClick={handleStartGame}
-            className="ml-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Start Game
-          </button>
         </div>
       </div>
     </nav>

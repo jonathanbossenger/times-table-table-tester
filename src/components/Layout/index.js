@@ -14,14 +14,14 @@ export function Layout({ children }) {
           <div className="flex gap-4">
             <button
               onClick={() => setShowInstructions(true)}
-              className="px-4 py-2 text-gray-600 hover:text-gray-900"
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
             >
               Instructions
             </button>
             {gameStatus !== 'idle' && (
               <button
                 onClick={resetGame}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
               >
                 Reset
               </button>

@@ -49,8 +49,7 @@ export function ProblemSet() {
   if (gameStatus === 'idle') {
     return (
       <div className="text-center p-8">
-        <h2 className="text-xl font-bold">Ready to start!</h2>
-        <p className="text-gray-600">Select your times tables range and press start to begin.</p>
+        <h2 className="text-2xl font-bold text-gray-700">Ready</h2>
       </div>
     );
   }
