@@ -11,8 +11,9 @@ export function Navigation() {
     startGame
   } = useGame();
 
-  if (gameStatus === 'playing') {
-    return null; // Hide navigation during gameplay
+  // Only show navigation when game is idle
+  if (gameStatus !== 'idle') {
+    return null;
   }
 
   const handleLowerBoundChange = (e) => {
