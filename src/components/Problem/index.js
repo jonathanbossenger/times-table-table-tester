@@ -57,8 +57,8 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
         'bg-white border-gray-300 hover:border-blue-500'
       }`}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="text-lg font-semibold whitespace-nowrap">
+      <div className="flex items-center">
+        <div className="text-lg font-semibold whitespace-nowrap mr-auto">
           {multiplicand} × {multiplier} = 
         </div>
         <input
@@ -67,7 +67,7 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
           inputMode="numeric"
           pattern="[0-9]*"
           disabled={gameStatus === 'completed'}
-          className={`flex-1 p-2 border rounded focus:outline-none focus:ring-2 text-lg ${
+          className={`w-48 p-2 border rounded focus:outline-none focus:ring-2 text-lg ${
             answerStatus === 'correct' ? 'border-green-500 focus:ring-green-200' :
             answerStatus === 'incorrect' ? 'border-red-500 focus:ring-red-200' :
             'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
