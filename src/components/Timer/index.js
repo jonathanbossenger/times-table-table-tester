@@ -3,7 +3,7 @@ import { useTimer } from '../../hooks/useTimer';
 import { useGame } from '../../context/GameContext';
 
 export function Timer() {
-  const { time, formattedTime, isRunning, start, stop } = useTimer();
+  const { time, formattedTime, isRunning, start, stop, reset } = useTimer();
   const { gameStatus } = useGame();
 
   useEffect(() => {
@@ -12,7 +12,12 @@ export function Timer() {
     } else if (gameStatus !== 'playing' && isRunning) {
       stop();
     }
-  }, [gameStatus, isRunning, start, stop]);
+    
+    // Reset timer when game returns to idle state
+    if (gameStatus === 'idle') {
+      reset();
+    }
+  }, [gameStatus, isRunning, start, stop, reset]);
 
   return (
     <div className="fixed top-4 right-4 bg-white shadow-lg rounded-lg p-4">

@@ -1,9 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { useValidation } from '../../hooks/useValidation';
+import { useGame } from '../../context/GameContext';
 
 export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, autoFocus, isLastProblem }) {
   const inputRef = useRef(null);
   const { handleAnswer, getAnswerStatus } = useValidation();
+  const { gameStatus } = useGame();
   
   useEffect(() => {
     registerRef(id, inputRef.current);
@@ -13,6 +15,12 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
   }, [id, registerRef, autoFocus]);
 
   const handleKeyDown = (e) => {
+    // Prevent keyboard navigation when game is completed
+    if (gameStatus === 'completed') {
+      e.preventDefault();
+      return;
+    }
+
     if (e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault();
       onFocus('next', id, isLastProblem);
@@ -26,6 +34,12 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
   };
 
   const handleChange = (e) => {
+    // Prevent input changes when game is completed
+    if (gameStatus === 'completed') {
+      e.preventDefault();
+      return;
+    }
+
     const value = e.target.value;
     // Only allow numeric input
     if (value === '' || /^\d+$/.test(value)) {
@@ -52,6 +66,7 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
+          disabled={gameStatus === 'completed'}
           className={`flex-1 p-2 border rounded focus:outline-none focus:ring-2 text-lg ${
             answerStatus === 'correct' ? 'border-green-500 focus:ring-green-200' :
             answerStatus === 'incorrect' ? 'border-red-500 focus:ring-red-200' :
