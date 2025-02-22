@@ -44,11 +44,19 @@ export function Results() {
             </div>
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="text-2xl font-bold text-center text-gray-600">
-              {timeInMinutes}:{timeInSeconds.toString().padStart(2, '0')}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-2xl font-bold text-center text-gray-600">
+                {timeInMinutes}:{timeInSeconds.toString().padStart(2, '0')}
+              </div>
+              <div className="text-gray-500 text-center">Time Taken</div>
             </div>
-            <div className="text-gray-500 text-center">Time Taken</div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-2xl font-bold text-center text-orange-600">
+                {score.incorrectAttempts}
+              </div>
+              <div className="text-gray-500 text-center">Total Incorrect Attempts</div>
+            </div>
           </div>
         </div>
 

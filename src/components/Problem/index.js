@@ -5,7 +5,7 @@ import { useGame } from '../../context/GameContext';
 export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, autoFocus, isLastProblem }) {
   const inputRef = useRef(null);
   const { handleAnswer, getAnswerStatus } = useValidation();
-  const { gameStatus } = useGame();
+  const { gameStatus, trackIncorrectAttempt } = useGame();
   const [hasLeft, setHasLeft] = useState(false);
   
   useEffect(() => {
@@ -24,14 +24,17 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
 
     if (e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault();
+      trackIncorrectAttempt(id);
       setHasLeft(true);
       onFocus('next', id, isLastProblem);
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
+      trackIncorrectAttempt(id);
       setHasLeft(true);
       onFocus('next', id, isLastProblem);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
+      trackIncorrectAttempt(id);
       setHasLeft(true);
       onFocus('previous', id, isLastProblem);
     }
