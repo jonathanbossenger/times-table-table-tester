@@ -170,15 +170,19 @@ export function GameProvider({ children }) {
   }, [problems, answers, incorrectAttempts, startTime, endTime, cumulativeTime]);
 
   const resetGame = useCallback((resetStreak = true) => {
-    setProblems([]);
     setAnswers({});
     setIncorrectAttempts({});
-    setGameStatus('idle');
+    
     if (resetStreak) {
+      setProblems([]);
       setStreak(0);
       setCumulativeTime(0);
+      setGameStatus('idle');
+    } else {
+      // If maintaining streak, immediately start a new game with fresh problems
+      startGame(); // This will call generateProblems and handle all necessary state updates
     }
-  }, []);
+  }, [startGame]);
 
   const value = {
     problems,

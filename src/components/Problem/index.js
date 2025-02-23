@@ -5,7 +5,7 @@ import { useGame } from '../../context/GameContext';
 export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, autoFocus, isLastProblem }) {
   const inputRef = useRef(null);
   const { handleAnswer, getAnswerStatus } = useValidation();
-  const { gameStatus, trackIncorrectAttempt } = useGame();
+  const { gameStatus, trackIncorrectAttempt, answers } = useGame();
   const [hasLeft, setHasLeft] = useState(false);
   
   useEffect(() => {
@@ -77,6 +77,7 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
+            value={answers[id] || ''}
             disabled={gameStatus === 'completed'}
             className={`w-48 p-2 border rounded focus:outline-none focus:ring-2 text-lg ${
               answerStatus === 'correct' ? 'border-green-500 focus:ring-green-200' :
