@@ -7,7 +7,7 @@ export function GameProvider({ children }) {
   const [gameStatus, setGameStatus] = useState('idle'); // idle, playing, completed
   const [answers, setAnswers] = useState({});
   const [incorrectAttempts, setIncorrectAttempts] = useState({});
-  const [lowerBound, setLowerBound] = useState(1);
+  const [lowerBound, setLowerBound] = useState(2);
   const [upperBound, setUpperBound] = useState(12);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -178,6 +178,10 @@ export function GameProvider({ children }) {
       setStreak(0);
       setCumulativeTime(0);
       setGameStatus('idle');
+      // Reset range values to defaults
+      setLowerBound(2);
+      setUpperBound(12);
+      setLastRange(null);
     } else {
       // If maintaining streak, immediately start a new game with fresh problems
       startGame(); // This will call generateProblems and handle all necessary state updates

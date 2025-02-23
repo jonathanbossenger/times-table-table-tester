@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGame } from '../../context/GameContext';
 import { Modal } from '../Modal';
+import { Instructions } from '../Modal/Instructions';
 
 export function Layout({ children }) {
   const { gameStatus, resetGame } = useGame();
@@ -56,22 +57,7 @@ export function Layout({ children }) {
         onClose={() => setShowInstructions(false)}
         title="How to Play"
       >
-        <div className="prose">
-          <ul className="mt-2 space-y-2 text-gray-600">
-            <li>Select your times tables range (e.g., from 4 to 7)</li>
-            <li>Press Start Game when ready</li>
-            <li>Enter the correct product for each multiplication problem</li>
-            <li>Use Tab or Enter to move to the next problem</li>
-            <li>Use Shift+Tab or Up Arrow to move to the previous problem</li>
-            <li>Complete all problems to finish the game</li>
-          </ul>
-          <button
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            onClick={() => setShowInstructions(false)}
-          >
-            Got it!
-          </button>
-        </div>
+        <Instructions isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
       </Modal>
     </div>
   );

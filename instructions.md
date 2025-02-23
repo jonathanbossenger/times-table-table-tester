@@ -59,6 +59,124 @@ src/
     └── validation.js
 ```
 
+## Core Features
+
+### Streak System
+- Tracks consecutive perfect games up to 5 stars
+- Perfect game requirements:
+  - All 21 answers must be correct
+  - No incorrect attempts during gameplay
+  - Range settings must remain consistent throughout streak
+- Star Rating Display:
+  - Shows ☆ for potential stars
+  - Shows ⭐ for earned stars (1-5)
+  - Resets to 0 after achieving 5 stars
+- Streak Timer:
+  - Accumulates time across streak games
+  - Only displays after completing first game in streak
+  - Continues counting during active streak
+  - Resets when streak breaks or after 5 stars
+- Motivational Messages:
+  - Different message for each star level
+  - Special message for 5-star achievement
+- Range Consistency:
+  - Must maintain same range settings during streak
+  - Default range is 2-12
+  - Changing range breaks streak
+  - Range resets to default after streak completion
+- Game Flow During Streak:
+  - Perfect game -> Immediate next game
+  - Failed game -> Return to range selection
+  - 5 stars -> Return to range selection
+
+### Implementation Details
+1. State Management:
+  ```javascript
+  // Streak-related state
+  const [streak, setStreak] = useState(0);
+  const [lastRange, setLastRange] = useState(null);
+  const [cumulativeTime, setCumulativeTime] = useState(0);
+  ```
+
+2. Range Tracking:
+  ```javascript
+  const isRangeConsistent = () => {
+    if (!lastRange) return true;
+    return lastRange.lower === lowerBound && 
+           lastRange.upper === upperBound;
+  };
+  ```
+
+3. Perfect Game Detection:
+  ```javascript
+  const isPerfect = correct === problems.length && 
+                    !hasIncorrectAttempts;
+  ```
+
+4. Streak Updates:
+  ```javascript
+  if (isPerfect && isRangeConsistent()) {
+    const newStreak = streak + 1;
+    setStreak(newStreak > 5 ? 5 : newStreak);
+    setCumulativeTime(cumulativeTime + currentGameTime);
+  } else {
+    setStreak(0);
+    setCumulativeTime(0);
+  }
+  ```
+
+5. Game Reset Logic:
+  ```javascript
+  const resetGame = (resetStreak = true) => {
+    if (resetStreak) {
+      setStreak(0);
+      setCumulativeTime(0);
+      setLowerBound(2);
+      setUpperBound(12);
+    } else {
+      startGame(); // Continue streak
+    }
+  };
+  ```
+
+### User Interface Elements
+1. Star Rating Display:
+  ```javascript
+  const StarRating = ({ streak }) => (
+    <div className="flex justify-center space-x-2">
+      {[...Array(5)].map((_, index) => (
+        <span key={index}>
+          {index < streak ? '⭐' : '☆'}
+        </span>
+      ))}
+    </div>
+  );
+  ```
+
+2. Streak Messages:
+  ```javascript
+  const getStreakMessage = (streak) => {
+    switch(streak) {
+      case 5: return "Perfect Streak! You're a Times Tables Master! 🏆";
+      case 4: return "Amazing! One more for ultimate achievement! 🌟";
+      case 3: return "Fantastic! You're on fire! 🔥";
+      case 2: return "Great work! Three more to go! ✨";
+      case 1: return "Excellent start! Keep going! 💫";
+      default: return "";
+    }
+  };
+  ```
+
+3. Timer Display:
+  ```javascript
+  // Show cumulative time only during active streak
+  {streak > 0 && (
+    <div className="text-xl font-mono">
+      Total Streak Time: {formatTime(cumulativeTime)}
+    </div>
+  )}
+  ```
+
 ## Development Steps
 
 ### 1. Set Up Context
