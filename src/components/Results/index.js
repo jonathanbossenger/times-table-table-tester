@@ -2,7 +2,7 @@ import React from 'react';
 import { useGame } from '../../context/GameContext';
 
 export function Results() {
-  const { gameStatus, getScore, resetGame } = useGame();
+  const { gameStatus, getScore, resetGame, streak, updateStreak } = useGame();
 
   if (gameStatus !== 'completed') {
     return null;
@@ -15,6 +15,15 @@ export function Results() {
 
   const timeInMinutes = Math.floor(score.timeSpent / 1000 / 60);
   const timeInSeconds = Math.floor((score.timeSpent / 1000) % 60);
+
+  // Check if current score is perfect
+  const isPerfectScore = score.correct === score.total;
+
+  // Handle game reset and streak update
+  const handleReset = () => {
+    const isPerfect = score.correct === score.total && score.incorrectAttempts === 0;
+    resetGame(!isPerfect); // Only reset streak if the score wasn't perfect
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -60,8 +69,22 @@ export function Results() {
           </div>
         </div>
 
+        {/* Add star streak display */}
+        <div className="flex justify-center space-x-2 mt-6">
+          {[...Array(5)].map((_, index) => (
+            <span key={index} className="text-2xl">
+              {index < streak ? '⭐' : '☆'}
+            </span>
+          ))}
+        </div>
+        {streak === 5 && (
+          <div className="text-center mt-2 text-yellow-600 font-bold">
+            Perfect Streak! 🏆
+          </div>
+        )}
+
         <button
-          onClick={resetGame}
+          onClick={handleReset}
           className="mt-8 w-full py-3 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
           Play Again

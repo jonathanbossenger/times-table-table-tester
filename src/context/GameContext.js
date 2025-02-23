@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 const GameContext = createContext();
 
@@ -11,6 +11,16 @@ export function GameProvider({ children }) {
   const [upperBound, setUpperBound] = useState(12);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  const [streak, setStreak] = useState(0); // Always start at 0 when component mounts
+
+  // Update localStorage when streak changes
+  useEffect(() => {
+    if (streak > 0) {
+      localStorage.setItem('mathStreak', streak.toString());
+    } else {
+      localStorage.removeItem('mathStreak');
+    }
+  }, [streak]);
 
   const generateProblems = useCallback(() => {
     const newProblems = [];
@@ -91,12 +101,48 @@ export function GameProvider({ children }) {
         trackIncorrectAttempt(lastProblem.id);
       }
       
+      // Calculate score to determine if perfect
+      let correct = 0;
+      let hasIncorrectAttempts = false;
+
+      problems.forEach(problem => {
+        const userAnswer = answers[problem.id];
+        // Check if current answer is correct
+        if (typeof userAnswer === 'number' && userAnswer === problem.answer) {
+          correct++;
+        }
+        // Check if there were any incorrect attempts
+        if (incorrectAttempts[problem.id] && incorrectAttempts[problem.id] > 0) {
+          hasIncorrectAttempts = true;
+        }
+      });
+
+      // Update streak only when game is completed with perfect score AND no incorrect attempts
+      const isPerfect = correct === problems.length && !hasIncorrectAttempts;
+      
+      console.log('Game completion:', {
+        correct,
+        total: problems.length,
+        hasIncorrectAttempts,
+        isPerfect,
+        currentStreak: streak
+      });
+
+      if (isPerfect) {
+        const newStreak = streak + 1;
+        console.log('Setting new streak:', newStreak);
+        setStreak(newStreak > 5 ? 5 : newStreak);
+      } else {
+        console.log('Resetting streak to 0');
+        setStreak(0);
+      }
+
       setGameStatus('completed');
       setEndTime(Date.now());
       return true;
     }
     return false;
-  }, [answers, problems, trackIncorrectAttempt]);
+  }, [answers, problems, trackIncorrectAttempt, incorrectAttempts, streak]);
 
   const getScore = useCallback(() => {
     if (gameStatus !== 'completed') return null;
@@ -109,7 +155,6 @@ export function GameProvider({ children }) {
       const attempts = incorrectAttempts[problem.id] || 0;
       totalIncorrectAttempts += attempts;
 
-      // Only count answers that exist and are numbers
       if (typeof userAnswer === 'number' && !isNaN(userAnswer)) {
         if (userAnswer === problem.answer) {
           correct++;
@@ -122,32 +167,10 @@ export function GameProvider({ children }) {
       }
     });
 
-    // Calculate total incorrect answers (problems - correct)
     const totalIncorrectAnswers = problems.length - correct;
-    
-    // Use the greater number between incorrect answers and attempts
     const totalIncorrect = Math.max(totalIncorrectAnswers, totalIncorrectAttempts);
-
-    console.log('Final Score Calculation:', {
-      totalProblems: problems.length,
-      answeredProblems: Object.keys(answers).length,
-      correctAnswers: correct,
-      totalIncorrectAnswers,
-      totalIncorrectAttempts,
-      finalTotalIncorrect: totalIncorrect,
-      incorrectAttemptsPerProblem: incorrectAttempts,
-      answers,
-      problems: problems.map(p => ({ 
-        id: p.id, 
-        equation: `${p.multiplicand} × ${p.multiplier}`,
-        correctAnswer: p.answer,
-        userAnswer: answers[p.id],
-        incorrectAttempts: incorrectAttempts[p.id] || 0
-      }))
-    });
     
     // Calculate percentage based on correct answers out of total possible points
-    // where total possible points is correct + max(incorrectAttempts, incorrectAnswers)
     const totalPossiblePoints = correct + totalIncorrect;
     const percentage = Math.round((correct / totalPossiblePoints) * 100);
     
@@ -162,11 +185,18 @@ export function GameProvider({ children }) {
     };
   }, [problems, answers, incorrectAttempts, gameStatus, startTime, endTime]);
 
-  const resetGame = useCallback(() => {
+  const resetGame = useCallback((resetStreak = true) => {
     setProblems([]);
     setAnswers({});
     setIncorrectAttempts({});
     setGameStatus('idle');
+    if (resetStreak) {
+      setStreak(0);
+    }
+  }, []);
+
+  const updateStreak = useCallback((newStreak) => {
+    setStreak(newStreak);
   }, []);
 
   const value = {
@@ -184,7 +214,9 @@ export function GameProvider({ children }) {
     trackIncorrectAttempt,
     checkCompletion,
     resetGame,
-    getScore
+    getScore,
+    streak,
+    updateStreak,
   };
 
   return (
