@@ -45,6 +45,7 @@ export function Navigation() {
           <div className="max-w-md">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Ready to start!</h2>
             <p className="text-gray-600">Select your times tables range and press start to begin.</p>
+            <p className="text-gray-600">Complete 5 sets to complete a streak for the selected range.</p>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Select Times Tables Range:</h3>
