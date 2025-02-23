@@ -6,23 +6,28 @@ export function GameProvider({ children }) {
   const [problems, setProblems] = useState([]);
   const [gameStatus, setGameStatus] = useState('idle'); // idle, playing, completed
   const [answers, setAnswers] = useState({});
-  const [incorrectAttempts, setIncorrectAttempts] = useState({}); // Track incorrect attempts per problem
+  const [incorrectAttempts, setIncorrectAttempts] = useState({});
   const [lowerBound, setLowerBound] = useState(1);
   const [upperBound, setUpperBound] = useState(12);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [streak, setStreak] = useState(0); // Always start at 0 when component mounts
+  const [streak, setStreak] = useState(0);
+  const [lastRange, setLastRange] = useState(null);
+  const [cumulativeTime, setCumulativeTime] = useState(0);
 
-  // Update localStorage when streak changes
-  useEffect(() => {
-    if (streak > 0) {
-      localStorage.setItem('mathStreak', streak.toString());
-    } else {
-      localStorage.removeItem('mathStreak');
-    }
-  }, [streak]);
+  // Check if range matches the last game's range
+  const isRangeConsistent = useCallback(() => {
+    if (!lastRange) return true;
+    return lastRange.lower === lowerBound && lastRange.upper === upperBound;
+  }, [lastRange, lowerBound, upperBound]);
 
   const generateProblems = useCallback(() => {
+    // Break streak if range changed
+    if (streak > 0 && !isRangeConsistent()) {
+      setStreak(0);
+      setCumulativeTime(0);
+    }
+
     const newProblems = [];
     // Generate problems only from selected times tables
     for (let i = lowerBound; i <= upperBound; i++) {
@@ -38,20 +43,22 @@ export function GameProvider({ children }) {
     // Shuffle and take exactly 21 problems
     const shuffled = [...newProblems]
       .sort(() => Math.random() - 0.5)
-      .slice(0, 21); // Always take 21 problems
+      .slice(0, 21);
 
     setProblems(shuffled);
     setAnswers({});
-    setIncorrectAttempts({}); // Reset incorrect attempts
+    setIncorrectAttempts({});
     return shuffled;
-  }, [lowerBound, upperBound]);
+  }, [lowerBound, upperBound, streak, isRangeConsistent]);
 
   const startGame = useCallback(() => {
     generateProblems();
     setGameStatus('playing');
     setStartTime(Date.now());
     setEndTime(null);
-  }, [generateProblems]);
+    // Store current range for streak tracking
+    setLastRange({ lower: lowerBound, upper: upperBound });
+  }, [generateProblems, lowerBound, upperBound]);
 
   const submitAnswer = useCallback((problemId, userAnswer) => {
     // Only store the answer if it's not empty
@@ -100,24 +107,24 @@ export function GameProvider({ children }) {
 
       problems.forEach(problem => {
         const userAnswer = answers[problem.id];
-        // Check if current answer is correct
         if (typeof userAnswer === 'number' && userAnswer === problem.answer) {
           correct++;
         }
-        // Check if there were any incorrect attempts
         if (incorrectAttempts[problem.id] && incorrectAttempts[problem.id] > 0) {
           hasIncorrectAttempts = true;
         }
       });
 
-      // Update streak only when game is completed with perfect score AND no incorrect attempts
       const isPerfect = correct === problems.length && !hasIncorrectAttempts;
+      const currentGameTime = endTime ? endTime - startTime : Date.now() - startTime;
       
-      if (isPerfect) {
+      if (isPerfect && isRangeConsistent()) {
         const newStreak = streak + 1;
         setStreak(newStreak > 5 ? 5 : newStreak);
+        setCumulativeTime(cumulativeTime + currentGameTime);
       } else {
         setStreak(0);
+        setCumulativeTime(0);
       }
 
       setGameStatus('completed');
@@ -125,7 +132,7 @@ export function GameProvider({ children }) {
       return true;
     }
     return false;
-  }, [answers, problems, trackIncorrectAttempt, incorrectAttempts, streak]);
+  }, [answers, problems, trackIncorrectAttempt, incorrectAttempts, streak, isRangeConsistent, startTime, endTime, cumulativeTime]);
 
   const getScore = useCallback(() => {
     if (gameStatus !== 'completed') return null;
@@ -147,10 +154,8 @@ export function GameProvider({ children }) {
 
     const totalIncorrectAnswers = problems.length - correct;
     const totalIncorrect = Math.max(totalIncorrectAnswers, totalIncorrectAttempts);
-    
-    // Calculate percentage based on correct answers out of total possible points
-    const totalPossiblePoints = correct + totalIncorrect;
-    const percentage = Math.round((correct / totalPossiblePoints) * 100);
+    const percentage = Math.round((correct / (correct + totalIncorrect)) * 100);
+    const currentGameTime = endTime - startTime;
     
     return {
       total: problems.length,
@@ -159,9 +164,10 @@ export function GameProvider({ children }) {
       incorrectAnswers: totalIncorrectAnswers,
       totalIncorrect,
       percentage,
-      timeSpent: endTime - startTime
+      timeSpent: currentGameTime,
+      cumulativeTime
     };
-  }, [problems, answers, incorrectAttempts, gameStatus, startTime, endTime]);
+  }, [problems, answers, incorrectAttempts, startTime, endTime, cumulativeTime]);
 
   const resetGame = useCallback((resetStreak = true) => {
     setProblems([]);
@@ -170,11 +176,8 @@ export function GameProvider({ children }) {
     setGameStatus('idle');
     if (resetStreak) {
       setStreak(0);
+      setCumulativeTime(0);
     }
-  }, []);
-
-  const updateStreak = useCallback((newStreak) => {
-    setStreak(newStreak);
   }, []);
 
   const value = {
@@ -194,7 +197,8 @@ export function GameProvider({ children }) {
     resetGame,
     getScore,
     streak,
-    updateStreak,
+    cumulativeTime,
+    isRangeConsistent
   };
 
   return (
