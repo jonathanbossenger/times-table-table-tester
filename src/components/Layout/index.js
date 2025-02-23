@@ -2,6 +2,7 @@ import React from 'react';
 import { useGame } from '../../context/GameContext';
 import { Modal } from '../Modal';
 import { Instructions } from '../Modal/Instructions';
+import { Menu } from '@headlessui/react';
 
 export function Layout({ children }) {
   const { gameStatus, resetGame } = useGame();
@@ -12,7 +13,7 @@ export function Layout({ children }) {
       <header className="bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">Times Table Tester</h1>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <button
               onClick={() => setShowInstructions(true)}
               className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
@@ -27,6 +28,41 @@ export function Layout({ children }) {
                 Reset
               </button>
             )}
+            {/*
+            <Menu as="div" className="relative">
+              <Menu.Button className="w-10 h-10 rounded-full bg-gray-500 hover:bg-gray-600 transition-colors flex items-center justify-center">
+                <svg 
+                  className="w-6 h-6 text-white" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                  />
+                </svg>
+              </Menu.Button>
+              <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="px-1 py-1">
+                  Placeholder for future menu items
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? 'bg-gray-100' : ''
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm text-gray-900`}
+                      >
+                        Login to save your results
+                      </button>
+                    )}
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </Menu>
+            */}
           </div>
         </div>
       </header>
