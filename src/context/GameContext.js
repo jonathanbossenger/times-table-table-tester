@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 
 const GameContext = createContext();
 
@@ -72,13 +72,12 @@ export function GameProvider({ children }) {
     }
 
     const numericAnswer = parseInt(userAnswer, 10);
-    const problem = problems.find(p => p.id === problemId);
     
     setAnswers(prev => ({
       ...prev,
       [problemId]: numericAnswer
     }));
-  }, [problems]);
+  }, []);
 
   // New function to track incorrect attempts when leaving a problem
   const trackIncorrectAttempt = useCallback((problemId) => {
@@ -167,7 +166,7 @@ export function GameProvider({ children }) {
       timeSpent: currentGameTime,
       cumulativeTime
     };
-  }, [problems, answers, incorrectAttempts, startTime, endTime, cumulativeTime]);
+  }, [problems, answers, incorrectAttempts, startTime, endTime, cumulativeTime, gameStatus]);
 
   const resetGame = useCallback((resetStreak = true) => {
     setAnswers({});
