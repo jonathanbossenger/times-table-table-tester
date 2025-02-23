@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useGame } from '../../context/GameContext';
 
 export function Results() {
   const { gameStatus, getScore, resetGame, streak } = useGame();
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    if (gameStatus === 'completed' && buttonRef.current) {
+      buttonRef.current.focus();
+    }
+  }, [gameStatus]);
 
   if (gameStatus !== 'completed') {
     return null;
@@ -107,8 +114,10 @@ export function Results() {
         )}
 
         <button
+          ref={buttonRef}
           onClick={handleReset}
-          className="mt-8 w-full py-3 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          type="button"
+          className="mt-8 w-full py-3 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           {streak === 5 ? 'Start New Challenge' : 'Play Again'}
         </button>
