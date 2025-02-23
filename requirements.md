@@ -182,3 +182,58 @@ A React-based web application for practicing multiplication tables with randomiz
 - Dark mode using Tailwind dark mode classes
 - Animation using Tailwind animation classes
 - Accessibility features using React-Aria
+
+## Additional Features
+
+### Streak System
+- Tracks perfect game streaks up to 5 games
+- Perfect game requires:
+  - All answers correct
+  - No incorrect attempts during gameplay
+  - Consistent range selection throughout streak
+    - Range must remain unchanged for all 5 games
+    - Changing range breaks the streak
+    - Lower and upper bounds must match previous game
+- Displays star rating (☆/⭐) based on streak count
+- Motivational messages based on streak level
+- Persists streak data in localStorage
+- Timer behavior during streaks:
+  - Timer continues from previous time during active streak
+  - Only resets to zero when streak is broken or reset
+  - Provides continuous challenge for maintaining speed
+
+### Enhanced Error Tracking
+- Tracks incorrect attempts per problem
+- Distinguishes between final incorrect answers and attempts
+- Calculates score based on both incorrect answers and attempts
+- More accurate percentage calculation considering attempts
+
+### User Interface Enhancements
+- GitHub repository link in bottom-right corner
+- Toast notifications for game completion
+- Responsive modals using Headless UI
+- Clean, modern design with consistent spacing
+- Improved visual feedback for game states
+
+### Navigation Improvements
+- Reset button during gameplay
+- Instructions button always accessible
+- Range validation to ensure lower bound ≤ upper bound
+- Automatic focus management between problems
+
+### Score Calculation
+- Advanced scoring system considering:
+  - Total correct answers
+  - Number of incorrect attempts
+  - Final incorrect answers
+  - Time taken to complete
+- Percentage calculation based on total possible points
+
+### State Management
+- Comprehensive game state tracking:
+  - Idle state
+  - Playing state
+  - Completed state
+- Persistent game progress
+- Automatic game completion detection
+- Clean state reset functionality

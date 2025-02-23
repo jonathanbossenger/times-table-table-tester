@@ -159,6 +159,222 @@ src/
 // Implement success/failure messages
 ```
 
+### 8. Implement Streak System
+
+1. Update GameContext:
+```javascript
+// Add streak state and persistence
+const [streak, setStreak] = useState(0);
+
+// Load streak from localStorage on mount
+useEffect(() => {
+  const savedStreak = localStorage.getItem('mathStreak');
+  if (savedStreak) {
+    setStreak(parseInt(savedStreak, 10));
+  }
+}, []);
+
+// Save streak to localStorage when it changes
+useEffect(() => {
+  if (streak > 0) {
+    localStorage.setItem('mathStreak', streak.toString());
+  } else {
+    localStorage.removeItem('mathStreak');
+  }
+}, [streak]);
+```
+
+2. Update Results Component:
+```javascript
+// Add star rating display
+const StarRating = ({ streak }) => (
+  <div className="flex justify-center space-x-2 mt-6">
+    {[...Array(5)].map((_, index) => (
+      <span key={index} className="text-2xl">
+        {index < streak ? '⭐' : '☆'}
+      </span>
+    ))}
+  </div>
+);
+
+// Add motivational messages
+const getStreakMessage = (streak) => {
+  switch(streak) {
+    case 5: return "Perfect Streak! You're a Times Tables Master! 🏆";
+    case 4: return "Amazing! Just one more perfect game for the ultimate achievement! 🌟";
+    case 3: return "Fantastic! You're on fire! Keep going for that perfect streak! 🔥";
+    case 2: return "Great work! You're building momentum! Three more to go! ✨";
+    case 1: return "Excellent start! Keep practicing for a perfect streak! 💫";
+    default: return "";
+  }
+};
+```
+
+### 9. Enhance Error Tracking
+
+1. Update GameContext:
+```javascript
+// Add incorrect attempts tracking
+const [incorrectAttempts, setIncorrectAttempts] = useState({});
+
+// Track incorrect attempts when leaving a problem
+const trackIncorrectAttempt = useCallback((problemId) => {
+  const problem = problems.find(p => p.id === problemId);
+  const userAnswer = answers[problemId];
+  
+  if (problem && typeof userAnswer === 'number' && userAnswer !== problem.answer) {
+    setIncorrectAttempts(prev => ({
+      ...prev,
+      [problemId]: (prev[problemId] || 0) + 1
+    }));
+  }
+}, [problems, answers]);
+```
+
+2. Update Score Calculation:
+```javascript
+const getScore = useCallback(() => {
+  let correct = 0;
+  let totalIncorrectAttempts = 0;
+  
+  problems.forEach(problem => {
+    const userAnswer = answers[problem.id];
+    const attempts = incorrectAttempts[problem.id] || 0;
+    totalIncorrectAttempts += attempts;
+
+    if (typeof userAnswer === 'number' && userAnswer === problem.answer) {
+      correct++;
+    }
+  });
+
+  const totalIncorrectAnswers = problems.length - correct;
+  const totalIncorrect = Math.max(totalIncorrectAnswers, totalIncorrectAttempts);
+  const percentage = Math.round((correct / (correct + totalIncorrect)) * 100);
+  
+  return {
+    total: problems.length,
+    correct,
+    incorrectAttempts: totalIncorrectAttempts,
+    incorrectAnswers: totalIncorrectAnswers,
+    percentage,
+    timeSpent: endTime - startTime
+  };
+}, [problems, answers, incorrectAttempts, startTime, endTime]);
+```
+
+### 10. Add UI Enhancements
+
+1. Add GitHub Link to Layout:
+```javascript
+<a
+  href="https://github.com/yourusername/times-table-tester"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="fixed bottom-4 right-4 flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+>
+  <svg viewBox="0 0 16 16" className="w-5 h-5" fill="currentColor">
+    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+  </svg>
+  <span>View on GitHub</span>
+</a>
+```
+
+2. Configure Toast Notifications:
+```javascript
+// Add Toaster to App.js
+<Toaster
+  position="top-right"
+  toastOptions={{
+    duration: 3000,
+    style: {
+      background: '#363636',
+      color: '#fff',
+    },
+    success: {
+      duration: 5000,
+      iconTheme: {
+        primary: '#4ade80',
+        secondary: '#fff',
+      },
+    },
+  }}
+/>
+
+// Use toast notifications
+toast.success(
+  `Completed! Score: ${score.correct}/${score.total} (${score.percentage}%)`,
+  { duration: 5000 }
+);
+```
+
+### 11. Implement Navigation Improvements
+
+1. Add Reset Button to Layout:
+```javascript
+{gameStatus !== 'idle' && (
+  <button
+    onClick={resetGame}
+    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+  >
+    Reset
+  </button>
+)}
+```
+
+2. Add Range Validation:
+```javascript
+const handleUpperBoundChange = (e) => {
+  const value = parseInt(e.target.value, 10);
+  if (value >= lowerBound) {
+    setUpperBound(value);
+  }
+};
+
+const handleStartGame = () => {
+  if (lowerBound > upperBound) {
+    alert('Lower bound must be less than or equal to upper bound');
+    return;
+  }
+  startGame();
+};
+```
+
+### 12. Testing Additional Features
+
+1. Test Streak System:
+```javascript
+// Test streak persistence
+test('streak persists in localStorage', () => {
+  // Add test implementation
+});
+
+// Test perfect game detection
+test('perfect game increases streak', () => {
+  // Add test implementation
+});
+```
+
+2. Test Error Tracking:
+```javascript
+// Test incorrect attempts tracking
+test('tracks incorrect attempts separately', () => {
+  // Add test implementation
+});
+
+// Test score calculation with attempts
+test('score includes incorrect attempts', () => {
+  // Add test implementation
+});
+```
+
+Remember to:
+- Test all new features thoroughly
+- Update documentation with new features
+- Ensure backward compatibility
+- Optimize performance for new features
+- Follow accessibility guidelines
+- Keep the codebase clean and maintainable
+
 ## Testing Steps
 
 1. Create test cases for core functionality:
