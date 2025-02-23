@@ -69,7 +69,7 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
     >
       <div className="flex flex-col">
         <div className="flex items-center">
-          <div className="text-lg font-semibold whitespace-nowrap mr-auto">
+          <div className="text-lg font-semibold whitespace-nowrap mr-auto problem-text">
             {multiplicand} × {multiplier} = 
           </div>
           <input
@@ -81,7 +81,7 @@ export function Problem({ id, multiplicand, multiplier, onFocus, registerRef, au
             className={`w-48 p-2 border rounded focus:outline-none focus:ring-2 text-lg ${
               answerStatus === 'correct' ? 'border-green-500 focus:ring-green-200' :
               (answerStatus === 'incorrect' && hasLeft) ? 'border-red-500 focus:ring-red-200' :
-              'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
+              'border-gray-300 focus:ring-blue-200 focus:border-blue-500 problem-input'
             }`}
             onChange={handleChange}
             onKeyDown={handleKeyDown}

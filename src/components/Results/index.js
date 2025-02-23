@@ -79,7 +79,27 @@ export function Results() {
         </div>
         {streak === 5 && (
           <div className="text-center mt-2 text-yellow-600 font-bold">
-            Perfect Streak! 🏆
+            Perfect Streak! You're a Times Tables Master! 🏆
+          </div>
+        )}
+        {streak === 4 && (
+          <div className="text-center mt-2 text-yellow-600">
+            Amazing! Just one more perfect game for the ultimate achievement! 🌟
+          </div>
+        )}
+        {streak === 3 && (
+          <div className="text-center mt-2 text-yellow-600">
+            Fantastic! You're on fire! Keep going for that perfect streak! 🔥
+          </div>
+        )}
+        {streak === 2 && (
+          <div className="text-center mt-2 text-yellow-600">
+            Great work! You're building momentum! Three more to go! ✨
+          </div>
+        )}
+        {streak === 1 && (
+          <div className="text-center mt-2 text-yellow-600">
+            Excellent start! Keep practicing for a perfect streak! 💫
           </div>
         )}
 

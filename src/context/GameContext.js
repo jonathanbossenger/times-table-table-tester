@@ -67,18 +67,11 @@ export function GameProvider({ children }) {
     const numericAnswer = parseInt(userAnswer, 10);
     const problem = problems.find(p => p.id === problemId);
     
-    console.log(`Submitting answer for problem ${problemId}:`, {
-      userAnswer: numericAnswer,
-      correctAnswer: problem?.answer,
-      isCorrect: numericAnswer === problem?.answer,
-      incorrectAttempts: incorrectAttempts[problemId] || 0
-    });
-
     setAnswers(prev => ({
       ...prev,
       [problemId]: numericAnswer
     }));
-  }, [problems, incorrectAttempts]);
+  }, [problems]);
 
   // New function to track incorrect attempts when leaving a problem
   const trackIncorrectAttempt = useCallback((problemId) => {
@@ -120,20 +113,10 @@ export function GameProvider({ children }) {
       // Update streak only when game is completed with perfect score AND no incorrect attempts
       const isPerfect = correct === problems.length && !hasIncorrectAttempts;
       
-      console.log('Game completion:', {
-        correct,
-        total: problems.length,
-        hasIncorrectAttempts,
-        isPerfect,
-        currentStreak: streak
-      });
-
       if (isPerfect) {
         const newStreak = streak + 1;
-        console.log('Setting new streak:', newStreak);
         setStreak(newStreak > 5 ? 5 : newStreak);
       } else {
-        console.log('Resetting streak to 0');
         setStreak(0);
       }
 
@@ -159,11 +142,6 @@ export function GameProvider({ children }) {
         if (userAnswer === problem.answer) {
           correct++;
         }
-        console.log(`Problem ${problem.id}: ${problem.multiplicand} × ${problem.multiplier} = ${problem.answer}`, {
-          userAnswer,
-          isCorrect: userAnswer === problem.answer,
-          incorrectAttempts: attempts
-        });
       }
     });
 
